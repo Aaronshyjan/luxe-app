@@ -48,8 +48,7 @@ export default function OrderTrackingScreen() {
     stages.push({ title: 'Cancelled', date: formatDate(order.updatedAt), completed: true, icon: <CheckCircle size={20} color="red" /> });
   }
 
-  const firstItem = order.items?.[0];
-  const product = firstItem?.product;
+  const items = order.items || [];
 
   return (
     <div className="animate-fade-in" style={{ paddingTop: '16px', paddingBottom: '100px' }}>
@@ -122,19 +121,27 @@ export default function OrderTrackingScreen() {
         ))}
       </div>
 
-      {product && (
+      {items.length > 0 && (
         <>
           <h2 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '16px' }}>Shipment Details</h2>
-          <div style={{ backgroundColor: 'white', padding: '16px', borderRadius: 'var(--border-radius-lg)', boxShadow: 'var(--shadow-soft)', display: 'flex', gap: '16px', marginBottom: '32px' }}>
-            <div style={{ width: '60px', height: '60px', borderRadius: 'var(--border-radius-md)', overflow: 'hidden', backgroundColor: '#F5F5F5' }}>
-              {product.images && product.images[0] && (
-                <img src={product.images[0]} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              )}
-            </div>
-            <div>
-              <div style={{ fontWeight: '600', marginBottom: '4px' }}>{product.name}</div>
-              <div style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Qty: {firstItem.quantity}</div>
-            </div>
+          <div style={{ backgroundColor: 'white', padding: '16px', borderRadius: 'var(--border-radius-lg)', boxShadow: 'var(--shadow-soft)', display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
+            {items.map((item, idx) => {
+              const p = item.product;
+              if (!p) return null;
+              return (
+                <div key={idx} style={{ display: 'flex', gap: '16px', borderBottom: idx !== items.length - 1 ? '1px solid #EAEAEA' : 'none', paddingBottom: idx !== items.length - 1 ? '16px' : '0' }}>
+                  <div style={{ width: '60px', height: '60px', borderRadius: 'var(--border-radius-md)', overflow: 'hidden', backgroundColor: '#F5F5F5', flexShrink: 0 }}>
+                    {p.images && p.images[0] && (
+                      <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    )}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: '600', marginBottom: '4px', fontSize: '14px', lineHeight: '1.4' }}>{p.name}</div>
+                    <div style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Qty: {item.quantity} × ₹{item.price}</div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </>
       )}
@@ -144,7 +151,10 @@ export default function OrderTrackingScreen() {
         <button style={{ flex: 1, padding: '16px', backgroundColor: 'white', border: '1px solid #EAEAEA', borderRadius: 'var(--border-radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontWeight: '600' }}>
           <Copy size={18} /> {order.order_number}
         </button>
-        <button style={{ flex: 1, padding: '16px', backgroundColor: 'var(--color-surface)', color: 'var(--color-primary)', border: 'none', borderRadius: 'var(--border-radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontWeight: '600' }}>
+        <button 
+          onClick={() => navigate('/support')}
+          style={{ flex: 1, padding: '16px', backgroundColor: 'var(--color-surface)', color: 'var(--color-primary)', border: 'none', borderRadius: 'var(--border-radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontWeight: '600' }}
+        >
           <MessageCircle size={18} /> Support
         </button>
       </div>

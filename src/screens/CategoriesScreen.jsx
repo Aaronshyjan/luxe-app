@@ -103,68 +103,50 @@ export default function CategoriesScreen() {
         ))}
       </div>
 
-      {/* Product Grid */}
-      <div className="product-grid" style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
+      {/* Product List */}
+      <div className="product-list" style={{
+        display: 'flex',
+        flexDirection: 'column',
         gap: '16px'
       }}>
         {isLoading ? (
-          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px' }}>
+          <div style={{ textAlign: 'center', padding: '40px' }}>
             <div style={{ width: '24px', height: '24px', border: '3px solid #EAEAEA', borderTopColor: 'var(--color-primary)', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 16px auto' }}></div>
             <div style={{ color: 'var(--color-text-muted)' }}>Loading products...</div>
           </div>
         ) : error ? (
-          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#FF4B4B' }}>
+          <div style={{ textAlign: 'center', padding: '40px', color: '#FF4B4B' }}>
             Failed to load products. Please ensure your backend is running.
           </div>
         ) : filteredProducts.map(product => (
-          <Link to={`/product/${product.id}`} key={product.id} className="product-card" style={{
+          <Link to={`/product/${product.id}`} key={product.id} style={{
             backgroundColor: 'white',
             borderRadius: 'var(--border-radius-lg)',
             overflow: 'hidden',
             boxShadow: 'var(--shadow-soft)',
-            position: 'relative',
-            display: 'block'
+            display: 'flex',
+            height: '140px',
+            textDecoration: 'none',
+            color: 'inherit'
           }}>
-            {/* Discount Badge */}
-            {product.discount && (
-              <div style={{
-                position: 'absolute',
-                top: '12px',
-                left: '12px',
-                backgroundColor: 'var(--color-primary)',
-                color: 'white',
-                fontSize: '10px',
-                fontWeight: '700',
-                padding: '4px 8px',
-                borderRadius: 'var(--border-radius-sm)',
-                zIndex: 10
-              }}>
-                {product.discount}
-              </div>
-            )}
-            
-            {/* Wishlist Button */}
-            <button style={{
-              position: 'absolute',
-              top: '12px',
-              right: '12px',
-              backgroundColor: 'rgba(255,255,255,0.8)',
-              backdropFilter: 'blur(4px)',
-              borderRadius: '50%',
-              width: '32px',
-              height: '32px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 10
-            }}>
-              <Heart size={16} color="var(--color-text-muted)" />
-            </button>
-
             {/* Product Image */}
-            <div style={{ height: '160px', overflow: 'hidden' }}>
+            <div style={{ width: '140px', height: '100%', position: 'relative', flexShrink: 0 }}>
+              {product.discount && (
+                <div style={{
+                  position: 'absolute',
+                  top: '8px',
+                  left: '8px',
+                  backgroundColor: 'var(--color-primary)',
+                  color: 'white',
+                  fontSize: '10px',
+                  fontWeight: '700',
+                  padding: '4px 8px',
+                  borderRadius: 'var(--border-radius-sm)',
+                  zIndex: 10
+                }}>
+                  {product.discount}
+                </div>
+              )}
               <img 
                 src={product.image} 
                 alt={product.name}
@@ -173,13 +155,19 @@ export default function CategoriesScreen() {
             </div>
 
             {/* Product Info */}
-            <div style={{ padding: '12px' }}>
-              <h3 style={{ fontSize: '13px', fontWeight: '500', marginBottom: '8px', lineHeight: '1.4', height: '36px', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-                {product.name}
-              </h3>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+            <div style={{ padding: '16px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div>
+                <h3 style={{ fontSize: '15px', fontWeight: '600', marginBottom: '4px', lineHeight: '1.3', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  {product.name}
+                </h3>
+                <div style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '8px' }}>
+                  {product.category}
+                </div>
+              </div>
+              
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <div style={{ fontWeight: '700', fontSize: '16px' }}>₹{product.price}</div>
+                  <div style={{ fontWeight: '700', fontSize: '16px', color: 'var(--color-primary)' }}>₹{product.price}</div>
                   {product.originalPrice && (
                     <div style={{ fontSize: '12px', color: 'var(--color-text-muted)', textDecoration: 'line-through' }}>
                       ₹{product.originalPrice}
@@ -187,16 +175,16 @@ export default function CategoriesScreen() {
                   )}
                 </div>
                 <button style={{
-                  backgroundColor: 'var(--color-text)',
-                  color: 'white',
-                  width: '32px',
-                  height: '32px',
+                  backgroundColor: 'var(--color-surface)',
+                  color: 'var(--color-primary)',
+                  width: '36px',
+                  height: '36px',
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}>
-                  <Plus size={18} />
+                  <Plus size={20} />
                 </button>
               </div>
             </div>
