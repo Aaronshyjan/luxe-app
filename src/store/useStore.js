@@ -56,8 +56,10 @@ const useStore = create(
       // User Auth State
       user: null,
       token: null,
+      checkoutEmail: null,
       setAuth: (user, token) => set({ user, token }),
-      logout: () => set({ user: null, token: null }),
+      setCheckoutEmail: (email) => set({ checkoutEmail: email }),
+      logout: () => set({ user: null, token: null, checkoutEmail: null }),
 
       // App Settings
       darkMode: false,

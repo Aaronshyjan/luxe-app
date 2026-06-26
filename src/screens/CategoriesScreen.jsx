@@ -11,7 +11,7 @@ export default function CategoriesScreen() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
-      const res = await apiClient.get('/products');
+      const res = await apiClient.get('/products?limit=100');
       return res.data.data;
     }
   });
@@ -203,7 +203,7 @@ export default function CategoriesScreen() {
           </Link>
         ))}
       </div>
-      {filteredProducts.length === 0 && (
+      {!isLoading && filteredProducts.length === 0 && (
         <div style={{ textAlign: 'center', padding: '40px', color: 'var(--color-text-muted)' }}>
           No products found in this category.
         </div>

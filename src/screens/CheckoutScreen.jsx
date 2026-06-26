@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import { MapPin, ChevronRight, CreditCard, Banknote, ShieldCheck } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import useStore from '../store/useStore'
+import apiClient from '../api/client'
 
 export default function CheckoutScreen() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { cart, clearCart, addOrder } = useStore();
+  const { cart, clearCart, setCheckoutEmail } = useStore();
   const buyNowItem = location.state?.buyNowItem;
   const itemsToCheckout = buyNowItem ? [buyNowItem] : cart;
   
@@ -24,26 +25,36 @@ export default function CheckoutScreen() {
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
 
-  const handlePlaceOrder = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handlePlaceOrder = async () => {
     if (itemsToCheckout.length === 0) return;
+    setIsSubmitting(true);
 
-    const newOrder = {
-      id: `#LX-${Math.floor(1000000 + Math.random() * 9000000)}`,
-      date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-      status: 'Processing',
-      amount: total,
-      image: itemsToCheckout[0]?.image, // Use the first item's image as the order image thumbnail
-      items: itemsToCheckout.length
-    };
+    try {
+      const orderData = {
+        customer_name: address.name,
+        phone: address.phone,
+        email: address.name.toLowerCase().replace(' ', '') + '@example.com', // Fake email based on name
+        address: address,
+        items: itemsToCheckout.map(item => ({ productId: item.id, quantity: item.quantity })),
+        payment_method: paymentMethod
+      };
 
-    addOrder(newOrder);
-    
-    // Only clear the cart if we were checking out the actual cart
-    if (!buyNowItem) {
-      clearCart();
+      await apiClient.post('/orders', orderData);
+      setCheckoutEmail(orderData.email);
+
+      if (!buyNowItem) {
+        clearCart();
+      }
+      
+      navigate('/order-success');
+    } catch (error) {
+      console.error('Order failed', error);
+      alert('Failed to place order. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    navigate('/order-success');
   }
 
   return (
@@ -227,17 +238,19 @@ export default function CheckoutScreen() {
           </div>
           <button 
             onClick={handlePlaceOrder}
+            disabled={isSubmitting}
             style={{ 
               width: '100%',
               padding: '16px', 
               borderRadius: 'var(--border-radius-pill)', 
-              backgroundColor: 'var(--color-primary)', 
+              backgroundColor: isSubmitting ? 'var(--color-text-muted)' : 'var(--color-primary)', 
               color: 'white', 
               fontWeight: '600',
-              fontSize: '16px'
+              fontSize: '16px',
+              cursor: isSubmitting ? 'not-allowed' : 'pointer'
             }}
           >
-            Place Order
+            {isSubmitting ? 'Processing...' : 'Place Order'}
           </button>
         </div>
       </div>

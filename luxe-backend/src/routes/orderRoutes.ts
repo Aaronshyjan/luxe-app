@@ -110,4 +110,18 @@ router.get('/admin/all', authenticate, authorizeAdmin, async (req, res) => {
   }
 });
 
+// Get all orders by user email (For guest tracking)
+router.get('/user/:email', async (req, res) => {
+  try {
+    const orders = await prisma.order.findMany({
+      where: { email: req.params.email },
+      include: { items: { include: { product: true } } },
+      orderBy: { createdAt: 'desc' }
+    });
+    res.json({ success: true, data: orders });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+});
+
 export default router;

@@ -12,7 +12,7 @@ export default function HomeScreen() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['featuredProducts'],
     queryFn: async () => {
-      const res = await apiClient.get('/products/featured');
+      const res = await apiClient.get('/products?limit=100');
       return res.data.data;
     }
   });
