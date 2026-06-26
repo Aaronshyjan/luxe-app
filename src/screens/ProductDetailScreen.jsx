@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { ChevronLeft, Heart, Star, ChevronDown, Check, ShieldCheck, Zap, Headphones } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import apiClient from '../api/client'
 import useStore from '../store/useStore'
 
@@ -12,7 +12,16 @@ export default function ProductDetailScreen() {
   const [activeTab, setActiveTab] = useState(null);
   const [selectedColor, setSelectedColor] = useState('black');
   const [currentImage, setCurrentImage] = useState(0);
-  const addToCart = useStore((state) => state.addToCart);
+  const { addToCart, guestId } = useStore();
+
+  const addWishlistMutation = useMutation({
+    mutationFn: async () => {
+      await apiClient.post('/wishlist/add', { guestId, productId: id });
+    },
+    onSuccess: () => {
+      alert('Added to wishlist!');
+    }
+  });
 
   const { data: rawProduct, isLoading, error } = useQuery({
     queryKey: ['product', id],
@@ -81,14 +90,17 @@ export default function ProductDetailScreen() {
         }}>
           <ChevronLeft size={24} />
         </button>
-        <button style={{ 
+        <button 
+          onClick={() => addWishlistMutation.mutate()}
+          disabled={addWishlistMutation.isPending}
+          style={{ 
           width: '40px', height: '40px', 
           backgroundColor: 'white', 
           borderRadius: '50%',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: 'var(--shadow-soft)'
         }}>
-          <Heart size={20} />
+          <Heart size={20} color={addWishlistMutation.isSuccess ? 'red' : 'black'} fill={addWishlistMutation.isSuccess ? 'red' : 'none'} />
         </button>
       </div>
 

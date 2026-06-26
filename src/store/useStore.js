@@ -57,8 +57,10 @@ const useStore = create(
       user: null,
       token: null,
       checkoutEmail: null,
+      guestId: 'guest_' + Math.random().toString(36).substr(2, 9), // Auto-generate on first load
       setAuth: (user, token) => set({ user, token }),
       setCheckoutEmail: (email) => set({ checkoutEmail: email }),
+      setGuestId: (id) => set({ guestId: id }),
       logout: () => set({ user: null, token: null, checkoutEmail: null }),
 
       // App Settings
