@@ -1,0 +1,281 @@
+@import url('https://fonts.cdnfonts.com/css/google-sans');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --color-primary: #1F108E;
+  --color-background: #F9F9FF;
+  --color-surface: #E7EEFF;
+  --color-success: #6CF8BB;
+  --color-text: #1A1A1A;
+  --color-text-muted: #666666;
+  --border-radius-lg: 16px;
+  --border-radius-md: 12px;
+  --border-radius-sm: 8px;
+  --border-radius-pill: 9999px;
+  
+  --shadow-soft: 0 4px 20px rgba(31, 16, 142, 0.08);
+  --shadow-hover: 0 8px 30px rgba(31, 16, 142, 0.15);
+  
+  --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Google Sans', 'Product Sans', 'Outfit', sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding-bottom: 80px; /* Space for bottom nav */
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  border: none;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Typography Utility */
+.text-primary { color: var(--color-primary); }
+.text-success { color: var(--color-success); }
+.text-muted { color: var(--color-text-muted); }
+
+/* App Container (Mobile First constraint for web view) */
+.app-container {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+  background-color: var(--color-background);
+  box-shadow: 0 0 40px rgba(0,0,0,0.05);
+  overflow-x: hidden;
+  transition: filter 0.3s ease, background-color 0.3s ease;
+}
+
+/* Smart Dark Mode Inversion */
+body.dark-mode .app-container {
+  filter: invert(1) hue-rotate(180deg);
+  background-color: #EDEDED; /* Inverts to #121212 */
+}
+
+body.dark-mode .app-container img,
+body.dark-mode .app-container video,
+body.dark-mode .app-container .hero-banner {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.95); }
+  50% { transform: scale(1.02); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in {
+  animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pop-in {
+  animation: popIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Enhanced hover states for standard interactive elements */
+.product-card {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.product-card:active {
+  transform: translateY(-2px) scale(0.99);
+}
+
+input {
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  transform: translateY(-1px);
+}
+
+.search-bar {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.search-bar:focus-within {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+/* Global Nav Bars */
+.top-app-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: var(--color-background);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.top-app-bar .logo {
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: 2px;
+  color: var(--color-primary);
+}
+
+.top-app-bar .actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.icon-btn {
+  color: var(--color-primary);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background-color: var(--color-primary);
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0 24px 0;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.03);
+  z-index: 50;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+}
+
+/* On large screens, constrain bottom nav to the mobile container */
+@media (min-width: 480px) {
+  .bottom-nav {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-item.active {
+  color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.nav-item svg {
+  stroke-width: 1.5;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-item.active svg {
+  stroke-width: 2.5;
+  transform: scale(1.1);
+}
+
+/* Common UI Elements */
+.screen-content {
+  padding: 0 24px 24px 24px;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: var(--border-radius-pill);
+  padding: 16px 24px;
+  font-weight: 600;
+  font-size: 16px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-bar {
+  background-color: white;
+  border-radius: var(--border-radius-pill);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 24px;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 15px;
+  width: 100%;
+  background: transparent;
+}
+
+.search-bar input::placeholder {
+  color: var(--color-text-muted);
+}
